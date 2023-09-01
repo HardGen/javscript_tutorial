@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+        var Widget = {
+            init: function(width, height) {
+                this.width = width
+                this.height = height
+                this.$elem = null
+            },
+            insert: function($where) {
+                if(this.$where) {
+                    this.$elem.css({
+                        width: this.width + "px",
+                        height: this.height + "px",
+                    }).appendTo($where)
+                }
+            }
+        }
+
+        var Button = Object.create(Widget)
+
+        Button.setup = function(width, height, label) {
+            //делегированный вызов
+            this.init(width, height)
+            this.label = label || "Default"
+
+            this.$elem = $("<button>").text(this.label)
+        }
+
+        Button.build = function($where) {
+            //делегирование
+            this.insert($where)
+            this.$elem.click(this.OnClick.bind(this))
+        }
+
+        Button.OnClick = function(evt) {
+            console.log(`Button '${this.label}' clicked!`)
+        }
+
+        $(document).ready(function() {
+            var $body = $(document.body)
+
+            var btn1 = Object.create(Button)
+            btn1.setup(125, 30, "Hello")
+
+            var btn2 = Object.create(Button)
+            btn2.setup(160, 60, "World")
+
+            btn1.build($body)
+            btn2.build($body)
+        })
+
+    </script>
+</body>
+</html>

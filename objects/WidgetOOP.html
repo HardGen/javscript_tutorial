@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+        function Widget(width, height) {
+            this.width = width || 50
+            this.height = height || 50
+            this.$elem = null
+        }
+
+        Widget.prototype.render = function($where) {
+            if(this.$elem) {
+                this.$elem.css({
+                    width: this.width + "px",
+                    height: this.height + "px"
+                }).appendTo($where)
+            }
+        }
+
+        //Дочерний класс Button
+        function Button(width, height, label) {
+            Widget.call(this, width, height)
+            this.label = label || "Default"
+
+            this.$elem = $("<button>").text(this.label)
+        }
+
+
+        // `Button` "наследует" от `Widget`
+        Button.prototype = Object.create(Widget.prototype)
+
+        // переопределяем базовый "унаследованный" `render(..)`
+        Button.prototype.render = function($where) {
+            //вызов super
+            Widget.prototype.render.call(this, $where)
+            this.$elem.click(this.OnClick.bind(this))
+        }
+        Button.prototype.OnClick = function(evt) {
+            console.log("Button '" + this.label + "' clicked!")
+        }
+
+        $(document).ready(function() {
+            var $body = $(document.body)
+            var btn1 = new Button(125, 30, "Hello")
+            var btn2 = new Button(150, 40, "World")
+
+
+            btn1.render($body)
+            btn2.render($body)
+
+        })
+    </script>
+</body>
+</html>
